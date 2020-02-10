@@ -1,5 +1,11 @@
+.weather-wrapper {
+  background-color: moccasin;
+  padding-top: 176rpx;
+  padding-bottom: 250rpx;
+}
+
 .temp {
-  margin-top:300rpx;
+  /* margin-top:300rpx; */
   text-align:center;
   font-size: 200rpx;
   line-height: 280rpx;
