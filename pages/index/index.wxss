@@ -1,7 +1,8 @@
 .weather-wrapper {
-  background-color: moccasin;
+  /* background-color: moccasin; */
   padding-top: 176rpx;
-  padding-bottom: 250rpx;
+  padding-bottom: 250rpx; 
+  position: relative;
 }
 
 .temp {
@@ -17,4 +18,13 @@
   line-height: 56rpx;
   text-align: center;
   opacity: 0.65
+}
+
+.weather-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
 }
