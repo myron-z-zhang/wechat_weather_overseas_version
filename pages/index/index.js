@@ -21,7 +21,7 @@ Page({
     nowTemp: '14°',
     nowWeather: 'cloudy',
     nowWeatherBackground: '',
-    forecast: []
+    hourlyWeather: []
   },
   
   onPullDownRefresh() {
@@ -37,40 +37,48 @@ Page({
   getNow(callback) {
     wx.request({
       url: 'https://test-miniprogram.com/api/weather/now', data: {
-        city: 'haikou'
+        city: 'lasa'
       },
       success: res => {
-        let result = res.data.result
-        let temp = result.now.temp
-        let weather = result.now.weather
-        console.log(result)
-        this.setData({
-          nowTemp: temp + '°',
-          nowWeather: weatherMap[weather],
-          nowWeatherBackground: '/images/' + weather + '-bg.png'
-        })
-        wx.setNavigationBarColor({
-          frontColor: '#000000',
-          backgroundColor: weatherColorMap[weather],
-        })
-
-        let forecast = []
-        let nowHour = new Date().getHours()
-        for (let i = 0; i < 24; i += 3) {
-          forecast.push({
-            time: (i + nowHour) % 24 + ':00',
-            iconPath: '/images/sunny-icon.png',
-            temp: '12'
-          })
-        forecast[0].time = 'now'
-        this.setData({
-          forecast: forecast
-        })
-        }
+        let result = res.data.result;
+        this.setNow(result);
+        this.setHourlyForecast(result);
       },
       complete: () => {
         callback && callback()
       }
     })
+  },
+
+  setNow(result) {
+    let temp = result.now.temp
+    let weather = result.now.weather
+    console.log(result)
+    this.setData({
+      nowTemp: temp + '°',
+      nowWeather: weatherMap[weather],
+      nowWeatherBackground: '/images/' + weather + '-bg.png'
+    })
+    wx.setNavigationBarColor({
+      frontColor: '#000000',
+      backgroundColor: weatherColorMap[weather],
+    })
+  },
+
+  setHourlyForecast(result) {
+    let forecast = result.forecast
+    let hourlyWeather = []
+    let nowHour = new Date().getHours()
+    for (let i = 0; i < 24; i += 3) {
+      hourlyWeather.push({
+        time: (i + nowHour) % 24 + ':00',
+        iconPath: '/images/' + forecast[i / 3].weather + '-icon.png',
+        temp: forecast[i / 3].temp + '°'
+      })
+      hourlyWeather[0].time = 'now'
+      this.setData({
+        hourlyWeather: hourlyWeather
+      })
+    }
   }
 })
