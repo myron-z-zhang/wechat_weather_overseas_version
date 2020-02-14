@@ -18,10 +18,12 @@ const weatherColorMap = {
 
 Page({
   data: {
-    nowTemp: '14°',
-    nowWeather: 'cloudy',
+    nowTemp: '',
+    nowWeather: '',
     nowWeatherBackground: '',
-    hourlyWeather: []
+    hourlyWeather: [],
+    todayTemp: "",
+    todayDate: ""
   },
   
   onPullDownRefresh() {
@@ -37,12 +39,13 @@ Page({
   getNow(callback) {
     wx.request({
       url: 'https://test-miniprogram.com/api/weather/now', data: {
-        city: 'lasa'
+        city: 'beijing'
       },
       success: res => {
         let result = res.data.result;
         this.setNow(result);
         this.setHourlyForecast(result);
+        this.setToday(result);
       },
       complete: () => {
         callback && callback()
@@ -80,5 +83,19 @@ Page({
         hourlyWeather: hourlyWeather
       })
     }
+  },
+
+  setToday(result) {
+    let date = new Date()
+    this.setData({
+      todayTemp: `${result.today.minTemp}° - ${result.today.maxTemp}°`,
+      todayDate: `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} Today`
+    })
+  },
+
+  onTapDayWeather() {
+    wx.navigateTo({
+      url: '/pages/list/list',
+    })
   }
 })
